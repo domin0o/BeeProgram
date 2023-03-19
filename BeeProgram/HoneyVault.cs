@@ -54,11 +54,13 @@ namespace BeeProgram
                 string warnings = "";
                 if (honey < LOW_LEVEL_WARNING)
                 {
-                    return warnings = "MAŁO MIODU - DODAJ PRODUCENTÓW MIODU";
+                    warnings = "MAŁO MIODU - DODAJ PRODUCENTÓW MIODU";
+                    return warnings;
                 }
                 if(nectar < LOW_LEVEL_WARNING)
                 {
-                    return warnings = "MAŁO NEKTARU - DODAJ PRODUCENTÓW NEKTARU";
+                    warnings = "MAŁO NEKTARU - DODAJ PRODUCENTÓW NEKTARU";
+                    return warnings;
                 }
                 return status + warnings;
             }
