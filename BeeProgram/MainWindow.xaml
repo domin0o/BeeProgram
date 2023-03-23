@@ -22,8 +22,8 @@
         <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="20">
             <ComboBox x:Name="jobSelector" FontSize="18" SelectedIndex="0" Margin="0,0,0,20">
                 <ListBoxItem Content="Zbieraczka nektaru" />
-                <ListBoxItem Content="Producent miodu" />
-                <ListBoxItem Content="Opieknuka Jaj" />
+                <ListBoxItem Content="Producentka miodu" />
+                <ListBoxItem Content="Opiekunka Jaj" />
             </ComboBox>
 
             <Button Content="Przydziel funkcję pszczone" FontSize="18" Click="AssignJob_Click"/>

@@ -16,9 +16,9 @@ namespace BeeProgram
         { 
             get; private set; 
         }
-        public Bee(string Job) 
+        public Bee(string job) 
         {
-            
+            Job = job;
         }
         public void WorkTheNextShift()
         {
@@ -37,22 +37,25 @@ namespace BeeProgram
 
     class Queen : Bee
     {
-        private float eggs;
-        private float unassignedWorkers;
-        private Bee[] workers;
+        private float eggs = 0;
+        private float unassignedWorkers = 3;
+        private Bee[] workers = new Bee[0];
+        public override float CostPerShift { get { return 2.15f; } }
         public const float EGGS_PER_SHIFT = 0.45f;
         public const float HONEY_PER_UNASSIGNED_WORKER = 0.5f;
+        public string StatusReport { get; private set;
+        }
         public Queen() : base("Królowa")
         {
-            AssignBee("Opiekunta jaj");
+            AssignBee("Opiekunka Jaj");
             AssignBee("Zbieraczka nektaru");
             AssignBee("Producentka miodu");
         }
-        void AssignBee(string job)
+        public void AssignBee(string job)
         {
             switch (job)
             {
-                case "Opiekunka jaj":
+                case "Opiekunka Jaj":
                     AddWorker(new EggCare(this));
                     break;
                 case "Zbieraczka nektaru":
@@ -64,7 +67,6 @@ namespace BeeProgram
             }
             UpdateStatusReport();
         }
-        public new float CostPerShift { get { return 2.15f; } }
 
         protected override void DoJob()
         {
@@ -72,9 +74,9 @@ namespace BeeProgram
 
             foreach (Bee worker in workers)
             {
-                WorkTheNextShift();
-                HoneyVault.ConsumeHoney(HONEY_PER_UNASSIGNED_WORKER * unassignedWorkers);
+                worker.WorkTheNextShift();
             }
+            HoneyVault.ConsumeHoney(HONEY_PER_UNASSIGNED_WORKER * unassignedWorkers);
             UpdateStatusReport();
         }
         /// <summary>
@@ -95,19 +97,23 @@ namespace BeeProgram
         {
             if(eggs >= eggsToConvert)
             {
-                // Tworze pomocniczą wartość helpEggs, aby uzyskać różnicę z eggs i eggsToConvert
-                float helpEggs = eggs - eggsToConvert;
                 eggs -= eggsToConvert;
-                unassignedWorkers += helpEggs;
+                unassignedWorkers += eggsToConvert;
             }
         }
 
         // Tworze metode do generowania raportów
         private void UpdateStatusReport()
         {
-            //HoneyVault.StatusReport;
-           // WorkerStatus();
-
+            StatusReport = $"Raport o stanie skarbca:\n" +
+                $"{HoneyVault.StatusReport}\n" +
+                $"\n" +
+                $"Liczba jaj: {eggs:0.0}\n" +
+                $"Nieprzydzielone robotnice:{unassignedWorkers:0.0}\n" +
+                $"Zbieraczka nektaru: {WorkerStatus("Zbieraczka nektaru")}\n" +
+                $"Producentka miodu: {WorkerStatus("Producentka miodu")}\n" +
+                $"Opiekunka jaj: {WorkerStatus("Opiekunka jaj")} \n" +
+                $"ROBOTNICE W SUMIE: {workers.Length}";
         }
         private string WorkerStatus(string job)
         {
@@ -125,7 +131,7 @@ namespace BeeProgram
 
     class HoneyManufacturer : Bee
     {
-        const float NECTAR_PROCESSED_PER_SHIFT = 31.15f;
+        public const float NECTAR_PROCESSED_PER_SHIFT = 31.15f;
         public HoneyManufacturer() : base("Producentka miodu")
         {
 
@@ -135,12 +141,12 @@ namespace BeeProgram
             HoneyVault.ConvertNectarToHoney(NECTAR_PROCESSED_PER_SHIFT);
         }
 
-        public new float CostPerShift { get { return 1.7f; } }
+        public override float CostPerShift { get { return 1.7f; } }
     }
 
     class NectarCollector : Bee
     {
-        const float NECTAR_COLLECTED_PER_SHIFT = 33.25f;
+        public const float NECTAR_COLLECTED_PER_SHIFT = 33.25f;
         public NectarCollector() : base("Zbieraczka nektaru")
         {
 
@@ -149,14 +155,14 @@ namespace BeeProgram
         {
             HoneyVault.CollectNectar(NECTAR_COLLECTED_PER_SHIFT);
         }
-        public new float CostPerShift { get { return 1.95f; } }
+        public override float CostPerShift { get { return 1.95f; } }
 
     }
     
     class EggCare : Bee
     {
         private Queen queen;
-        const float CARE_PROGRESS_PER_SHIFT = 0.15f;
+        public const float CARE_PROGRESS_PER_SHIFT = 0.15f;
         public EggCare(Queen queen) : base("Opiekunka jaj")
         {
             this.queen = queen;
@@ -165,6 +171,6 @@ namespace BeeProgram
         {
             queen.CareForEggs(CARE_PROGRESS_PER_SHIFT);
         }
-        public new float CostPerShift { get { return 1.35f; } }
+        public override float CostPerShift { get { return 1.35f; } }
     }
 }
