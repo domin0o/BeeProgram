@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BeeProgram
 {
-    internal class Bee 
+    abstract class Bee 
     {
-        virtual public float CostPerShift
+        public abstract float CostPerShift
         {
-            get; private set;
+            get;
         }
         public string Job 
         { 
@@ -29,10 +29,7 @@ namespace BeeProgram
             
         }
 
-        protected virtual void DoJob()
-        {
-
-        }
+        protected abstract void DoJob();
     }
 
     class Queen : Bee
