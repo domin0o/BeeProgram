@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace BeeProgram
         protected abstract void DoJob();
     }
 
-    class Queen : Bee
+    class Queen : Bee, INotifyPropertyChanged
     {
         private float eggs = 0;
         private float unassignedWorkers = 3;
@@ -40,6 +41,9 @@ namespace BeeProgram
         public override float CostPerShift { get { return 2.15f; } }
         public const float EGGS_PER_SHIFT = 0.45f;
         public const float HONEY_PER_UNASSIGNED_WORKER = 0.5f;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public string StatusReport { get; private set;
         }
         public Queen() : base("Królowa")
@@ -111,11 +115,12 @@ namespace BeeProgram
                 $"Producentka miodu: {WorkerStatus("Producentka miodu")}\n" +
                 $"Opiekunka jaj: {WorkerStatus("Opiekunka jaj")} \n" +
                 $"ROBOTNICE W SUMIE: {workers.Length}";
+            OnPropertyChanged("StatusReport");
         }
         private string WorkerStatus(string job)
         {
             int count = 0;
-            foreach(Bee worker in workers)
+            foreach(IWorker worker in workers)
             {
                 if(worker.Job == job)
                 {
@@ -123,6 +128,11 @@ namespace BeeProgram
                 }
             }
             return $"{job}: {count} ";
+        }
+        
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 
@@ -158,7 +168,7 @@ namespace BeeProgram
     
     class EggCare : Bee
     {
-        private Queen queen;
+        private readonly Queen queen;
         public const float CARE_PROGRESS_PER_SHIFT = 0.15f;
         public EggCare(Queen queen) : base("Opiekunka jaj")
         {

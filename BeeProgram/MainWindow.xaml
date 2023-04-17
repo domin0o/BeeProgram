@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:BeeProgram"
         mc:Ignorable="d"
         Title="System zarządzania rojem" Height="325" Width="625">
-    <Grid>
+    <Window.Resources>
+        <local:Queen x:Key="queen"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource queen}">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="4*"/>
@@ -31,7 +34,7 @@
         <Button Grid.Row="2" Content="Następna zmiana" FontSize="18" Click="WorkShift_Click" Margin="20" />
 
         <Label Content="Raport dla królowej" Grid.Column="1" FontSize="18" Margin="20,0" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-        <TextBox x:Name="statusReport" IsReadOnly="True" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="20"/>
+        <TextBox Text="{Binding StatusReport, Mode=OneWay}" x:Name="statusReport" IsReadOnly="True" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="20"/>
     </Grid>
     
 </Window>

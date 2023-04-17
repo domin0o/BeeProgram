@@ -22,11 +22,12 @@ namespace BeeProgram
     public partial class MainWindow : Window
     {
         private DispatcherTimer timer = new DispatcherTimer();
-        private Queen queen = new Queen();
+        private readonly Queen queen;
         public MainWindow()
         {   
             InitializeComponent();
-            statusReport.Text = queen.StatusReport;
+            queen = Resources["queen"] as Queen;
+            //statusReport.Text = queen.StatusReport;
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1.5);
             timer.Start();
